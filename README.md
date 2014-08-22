@@ -28,8 +28,8 @@
 1) Make the original repository upstream remote for your local
 
 cd github\sunil
-git clone https://github.com/<user>/springhibernatesession
-(<user> is your account)
+git clone https://github.com/&lt;user>/springhibernatesession
+(&lt;user> is your account)
 cd springhibernatesession
 
  ___________________________________________________________________________________________ 

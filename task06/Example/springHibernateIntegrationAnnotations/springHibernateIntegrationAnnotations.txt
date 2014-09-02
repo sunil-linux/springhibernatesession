@@ -1,0 +1,19 @@
+how to use annotations to wire a LocalSessionFactoryBean into the SessionFactory object of a DAO. The hibernate session is then obtained from this session factory using the getCurrentSession() method. By default the session uses a SpringSessionContext for the hibernate CurrentSessionContext and a SpringTransactionFactory as the transaction strategy. Please read the tutorials specified in the prerequisite trails to get a comprehensive idea.
+
+
+===========================================
+HibernateTemplate(below) can be used in a HibernateSupportDao to perform Hibernate based database operations. However, it is possible to directly obtain a Hibernate session using the getSession() method of the Hibernate SessionFactory. 
+
+Wire a LocalSessionFactoryBean into the DAO as a SessionFactory object and then use the getSession method of this object to obtain the session. 
+
+This session is then managed by Spring (The CurrentSessionContext of the hibernate session is set to SpringSessionContext and the transaction strategy is set to SpringTransactionFactory) unless JTA is configured for use.
+
+
+==================================
+HibernateTemplate - Spring provides a class called org.springframework.orm.hibernate3.HibernateTemplate that helps in accessing the database via hibernate. One of its main features is mapping of hibernate exceptions to DataAccessExceptions. The main method in HibernateTemplate is the execute method that takes in a hibernate callback. HibernateTemplate also takes care of obtaining or releasing sessions and hence the callback function or invoking function does not have to manage sessions. The SessionFactory is injected into HibernateTemplate using a LocalSessionFactoryBean. Spring manages the creation and shutting down of the factory. HibernateTemplate provides methods such as find, saveOrUpdate, persist, delete etc that performs the corresponding function in hibernate but manages sessions and exceptions.
+
+LocalSessionFactoryBean - This is a spring factory bean that creates hibernate sessionfactory. The main purpose of this class is to set up the Hibernate SessionFactory in a spring context. The hibernate configuration properties can be passed within the XML. The configuration properties include the hibernate mapping resources, hibernate properties and a datasource. The SessionFactory can handle both pure hibernate session management with single database or transactions that span multiple databases using JTA .
+
+AnnotaionSessionFactoryBean - This is a subclass of LocalSessionFactoryBean but supports annotation based mappings.
+
+HibernateDaoSupport - This class is a convenience class for hibernate based database access. This is a wrapper over HibernateTemplate. It can be initialized using a SessionFactory. It creates the HibernateTemplate and subclasses can use the getHibernateTemplate() method to obtain the hibernateTemplate and then perform operations on it. The class can also be initialized using a preconfigured HibernateTemplate. Create your own DAO by extending this class, provide a SessionFactory or HibernateTemplate and start performing operations using the getHibernateTemplate() method.

@@ -1,0 +1,16 @@
+JPA (Java Persistence API) - JPA is a persistence framework for Object Relational Mapping. It is based on POJO (Plain Old Java Object). It was born out of the complexity experienced in EJB2. It can be used in both EJB and non-EJB context.
+
+EntityManager- EntityManager is part of the persistence API. The instance of EntityManager is associated with a persistence context. The EntityManager has methods such as persist, merge, remove, find etc. The persist method, for example, takes in an Entity and persists it. The EntityManager is produced by an implementation of EntityManagerFactory. The Entity Manager may be managed by the application (Application managed Entity Manager) or by the container (Container Manager Entity Manager).
+
+LocalEntityManagedFactoryBean - This is a spring FactoryBean that creates an EntityManagerFactory. This is configured as spring bean and then injected into the DAO as a property. The configuration settings are passed through META-INF/persistence.xml. persistence.xml contains one or more persistence units. The persistence units contains one or more persistence classes along with the data source and mapping files. The persistence Unit is then injected into the LocalEntityManagedFactoryBean configuration in spring xml. Note that for spring, there is not much advantage in using a LocalEntityManagedFactoryBean.
+
+LocalContainerManagedFactoryBean- This is a spring FactoryBean that creates an EntityManagerFactory. However, this factory is managed by spring. Instead of persistence.xml the configuration settings can be set in the spring application context. For example, create a datasource and pass the datasource in the LocalContainerManagedFactoryBean bean. If a data source is specified in both persistence.xml and in the spring configuration then the later takes precedence. Along with DataSource a property called jpaVendorAdapter is passed to the LocalContainerManagedFactoryBean. Different adapters such as HibernateJpaVendorAdapter, OpenJpaVendorAdapter etc are provided by spring. Various properties can be set in the Vendor Adapter. LocalContainerManagedFactoryBean is the mostly likely choice for use in spring.
+
+Once an EntityManager is obtained, it can be injected into the DAO. The standard way is to use a JpaTemplate and a JpaDaoSupport, however to decrease coupling it is favorable to use pure JPA by directly injecting the EntityManager in the DAO. This can be achieved by using the @PersistenceContext annotation on the EntityManager variable in the DAO. The class is also annotated with @Repository so that spring knows that the exceptions need to be translated and with @Transactional to specify the transactional context.
+
+===========================
+Create the Person (see sample code below). This is the entity which is inserted and selected from database using Hibernate. 
+
+Hibernate based mapping is done using annotations @Entity and @Table which tells Hibernate which table to map this entity to (see lines 9-10 below). 
+The mapping of identifier is done using annotations @Id, @GeneratedValue and @Column (see lines 16-18 below). This corresponds to the primary key of the PERSON table. 
+This demonstrates the usage of JPA annotations for Object Relational Mapping.
